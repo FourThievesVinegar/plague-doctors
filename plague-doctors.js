@@ -1,19 +1,24 @@
 const IMAGE_URL_START = "/images/";
 const ACTION_MAP = {
-  nothing: 0,
-  head_wag: 1,
-  walk: 2,
+  idle: 0,
+  head_wagging: 1,
+  looking: 1,
+  walking: 2,
+  running: 2,
   whack: 3,
-  gas: 4,
-  shrug: 5,
-  die: 6,
+  coloring: 4,
+  shrugging: 5,
+  dying: 6,
 };
 const ALLOWED_ACTIVITIES = [
   "idle",
+  "head_wagging",
   "walking",
   "running",
+  "whacking",
   "looking",
   "coloring",
+  "shrugging",
   "dying",
 ];
 const TARGETED_ACTIVITIES = {
@@ -121,6 +126,9 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   };
 
   let getVectorToElement = (theElement) => {
+    if (!theElement || !myElement) {
+      return;
+    }
     let myBox = myElement.getBoundingClientRect();
     let theirBox = theElement.getBoundingClientRect();
     let xDistance = theirBox.x - myBox.x + myBox.width;
