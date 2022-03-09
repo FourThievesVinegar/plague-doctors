@@ -160,7 +160,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     velocityX = speed * (vector.x / totalDistance);
     velocityY = speed * (vector.y / totalDistance);
 
-    if (velocityX < 0) {
+    if (velocityX < -0.5) {
       isReversed = true;
       myElement.classList.add("image-reversed");
     } else {
