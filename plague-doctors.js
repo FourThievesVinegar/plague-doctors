@@ -48,6 +48,10 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function getRandomColor() {
+  return ALLOWED_COLORS[getRandomInt(ALLOWED_COLORS.length)];
+}
+
 function randomly(chance, outcome) {
   switch (getRandomInt(chance)) {
     case 1:
@@ -66,7 +70,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   // How we are rendered
   let isReversed = false; // Is the plague dr facing left?
-  let currentColor = "green"; // What color are we currently?
+  let currentColor = getRandomColor(); // What color are we currently?
   let currentAction = "head_wag"; // What is the dr doing?
 
   // When we are traveling about the page
@@ -194,13 +198,22 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     currentActivity = "dying";
     if (activityHeartbeatCount > 12) {
       dead = true;
-      setSprite("idle");
-      myElement.classList.add("dead");
+      // becomeCorpse() //Too sad looking at the little corpses
+      vanish();
     }
   };
 
+  let vanish = () => {
+    myElement.style.display = "none";
+  };
+
+  let becomeCorpse = () => {
+    setSprite("idle");
+    myElement.classList.add("dead");
+  };
+
   let changeColor = (color) => {
-    currentColor = color || ALLOWED_COLORS[getRandomInt(ALLOWED_COLORS.length)];
+    currentColor = color || getRandomColor();
   };
 
   let move = () => {
