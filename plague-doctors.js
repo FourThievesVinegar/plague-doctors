@@ -183,9 +183,8 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   };
 
   let checkArrived = (vector) => {
-    if (vector.y <= 1 && vector.y > -5 && Math.abs(vector.x) < 15) {
-      //we are just below (in front of) our destination
-      // and nearby it in the x direction
+    if (Math.abs(vector.y) <= 15 && Math.abs(vector.x) <= 15) {
+      //We are near the destination
       return true;
     }
   };
@@ -274,7 +273,10 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       setSprite("whacking");
       activityHeartbeatCount = 0;
     }
-    if (activityHeartbeatCount % HEARTBEATS_TO_WHACK === 0) {
+    if (
+      activityHeartbeatCount > 0 &&
+      activityHeartbeatCount % HEARTBEATS_TO_WHACK === 0
+    ) {
       doctorWhacks = parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
       if (isReversed) {
         doctorWhacks--;
