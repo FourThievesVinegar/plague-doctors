@@ -179,6 +179,11 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     locationY += velocityY;
   };
 
+  let lookAtElement = () => {
+    currentActivity = "looking";
+    setSprite("looking");
+  };
+
   let walkToElement = (theElement) => {
     if (theElement) {
       targetElement = theElement;
@@ -190,6 +195,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     const vector = getVectorToElement(targetElement);
     if (checkArrived(vector)) {
       stop();
+      lookAtElement();
     } else {
       setVelocity(vector);
       move();
@@ -207,6 +213,12 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
       case "walking": {
         walkToElement();
+      }
+      case "looking": {
+        switch (getRandomInt(20)) {
+          case 1:
+            stop();
+        }
       }
     }
   };
