@@ -50,14 +50,16 @@ function randomly(chance, outcome) {
   switch (getRandomInt(chance)) {
     case 1:
       outcome();
+      return true; //We return true if the outcome happened
   }
 }
 
 var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let myElement = null; // The element rendering the gif
+  let debugging = false; // Should we output debugging logs?
+  //TODO: Fix scoping bug that prevents this from changing
 
   let currentActivity = "idle";
-  let currentAnimationFrame = 0;
 
   // How we are rendered
   let isReversed = false; // Is the plague dr facing left?
@@ -71,13 +73,15 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let velocityX = 0;
   let velocityY = 0;
 
-  let heartbeat;
+  let activityHeartbeatCount;
 
   //
   // UTILITY FUNCTIONS
   //
   let updateSpriteLocation = () => {
-    console.log(myElement);
+    if (debugging) {
+      console.log(myElement);
+    }
     myElement.style.left = locationX + "px";
     myElement.style.top = locationY + "px";
   };
@@ -137,7 +141,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   let getVectorToElement = (theElement) => {
     if (!theElement || !myElement) {
-      return;
+      return { x: 0, y: 0 };
     }
     let myBox = myElement.getBoundingClientRect();
     let theirBox = theElement.getBoundingClientRect();
@@ -175,10 +179,15 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   // BASIC BEHAVIORS
   let stop = () => {
+    activityHeartbeatCount = 0;
     currentActivity = "idle";
     velocityX = 0;
     velocityY = 0;
     setSprite("idle");
+  };
+
+  let changeColor = (color) => {
+    currentColor = color || ALLOWED_COLORS[getRandomInt(ALLOWED_COLORS.length)];
   };
 
   let move = () => {
@@ -222,6 +231,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
         walkToElement();
         randomly(1000, () => {
           stop();
+          changeColor();
         });
         break;
       }
@@ -248,7 +258,10 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     document.body.appendChild(myElement);
 
     heartbeat = window.setInterval(() => {
-      console.log("❤️ ", statusString());
+      if (debugging) {
+        console.log("❤️ ", statusString());
+      }
+      activityHeartbeatCount++;
       doSomething();
       updateSpriteLocation();
     }, HEATBEAT_INTERVAL);
@@ -259,6 +272,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     setSprite,
     stop,
     walkToElement,
+    debugging,
   };
 };
 
@@ -276,6 +290,11 @@ var PlagueDoctorFactory = (function () {
 
 var PlagueDoctors = (function () {
   let plagueDoctors = [];
+  let enableDebugging = (value) => {
+    for (i = 0; i < plagueDoctors.length; i++) {
+      plagueDoctors[i].debugging = value;
+    }
+  };
   let init = (numDoctors) => {
     for (i = 0; i < numDoctors; i++) {
       plagueDoctors.push(PlagueDoctorFactory.createPlagueDoctor());
@@ -285,6 +304,7 @@ var PlagueDoctors = (function () {
 
   return {
     init,
+    enableDebugging,
   };
 })();
 
