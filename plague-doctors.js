@@ -257,7 +257,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
       window.setTimeout(() => {
         PlagueDoctorFactory.createPlagueDoctor().init();
-      }, getRandomInt(10) * 1000);
+      }, (getRandomInt(10) + 5) * 1000);
     });
   };
 
