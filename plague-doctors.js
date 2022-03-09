@@ -229,7 +229,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
       case "walking": {
         walkToElement();
-        randomly(1000, () => {
+        randomly(500, () => {
           stop();
           changeColor();
         });
