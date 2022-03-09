@@ -46,6 +46,13 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function randomly(chance, outcome) {
+  switch (getRandomInt(chance)) {
+    case 1:
+      outcome();
+  }
+}
+
 var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let myElement = null; // The element rendering the gif
 
@@ -206,19 +213,23 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let doSomething = () => {
     switch (currentActivity) {
       case "idle": {
-        switch (getRandomInt(10)) {
-          case 1:
-            walkToElement(pickRandomElement());
-        }
+        randomly(10, () => {
+          walkToElement(pickRandomElement());
+        });
+        break;
       }
       case "walking": {
         walkToElement();
+        randomly(1000, () => {
+          stop();
+        });
+        break;
       }
       case "looking": {
-        switch (getRandomInt(20)) {
-          case 1:
-            stop();
-        }
+        randomly(20, () => {
+          stop();
+        });
+        break;
       }
     }
   };

@@ -113,6 +113,13 @@
       return Math.floor(Math.random() * max);
     }
 
+    function randomly(chance, outcome) {
+      switch (getRandomInt(chance)) {
+        case 1:
+          outcome();
+      }
+    }
+
     var plagueDoctorTemplate = function plagueDoctorTemplate() {
       let myElement = null; // The element rendering the gif
 
@@ -249,6 +256,11 @@
         locationY += velocityY;
       };
 
+      let lookAtElement = () => {
+        currentActivity = "looking";
+        setSprite("looking");
+      };
+
       let walkToElement = (theElement) => {
         if (theElement) {
           targetElement = theElement;
@@ -260,6 +272,7 @@
         const vector = getVectorToElement(targetElement);
         if (checkArrived(vector)) {
           stop();
+          lookAtElement();
         } else {
           setVelocity(vector);
           move();
@@ -270,13 +283,23 @@
       let doSomething = () => {
         switch (currentActivity) {
           case "idle": {
-            switch (getRandomInt(10)) {
-              case 1:
-                walkToElement(pickRandomElement());
-            }
+            randomly(10, () => {
+              walkToElement(pickRandomElement());
+            });
+            break;
           }
           case "walking": {
             walkToElement();
+            randomly(1000, () => {
+              stop();
+            });
+            break;
+          }
+          case "looking": {
+            randomly(20, () => {
+              stop();
+            });
+            break;
           }
         }
       };
