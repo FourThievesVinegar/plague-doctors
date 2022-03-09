@@ -7,6 +7,14 @@
       width: 100%;
       height: 100%;
     }
+    h1,
+    h2,
+    p {
+      text-align: center;
+      width: fit-content;
+      max-width: 500px;
+      margin: 36px auto;
+    }
     .test-div {
       position: absolute;
       width: 100px;
@@ -15,8 +23,8 @@
       background-color: #999;
     }
     .test-div-1 {
-      top: 20%;
-      left: 20%;
+      top: 40%;
+      left: 35%;
     }
     .test-div-2 {
       top: 35%;
@@ -58,6 +66,29 @@
   </style>
 </head>
 <body class="test-page">
+  <h1>Plague Doctors</h1>
+  <h2>A project by and for the Four Thieves Vinegar Collective</h2>
+  <p>
+    But you can use it too!
+    <a
+      target="_blank"
+      href="https://github.com/FourThievesVinegar/plague-doctors"
+      >Get the script and styles from the GitHub repo</a
+    >
+    or add
+    <a
+      target="_blank"
+      href="https://plague-doctors.netlify.app/plague-doctors.js"
+      >the script</a
+    >
+    and
+    <a
+      target="_blank"
+      href="https://plague-doctors.netlify.app/plague-doctors.css"
+      >the styles</a
+    >
+    to your page!
+  </p>
   <div class="test-div test-div-1"></div>
   <div class="test-div test-div-2"></div>
   <div class="test-div test-div-3"></div>
@@ -70,7 +101,7 @@
       looking: 1,
       walking: 2,
       running: 2,
-      whack: 3,
+      whacking: 3,
       coloring: 4,
       shrugging: 5,
       dying: 6,
@@ -217,7 +248,7 @@
         } while (
           randomElement === document.body ||
           randomElement === myElement ||
-          randomElement.tagName === "HTML"
+          (randomElement && randomElement.tagName === "HTML")
         );
         return randomElement;
       };
@@ -253,14 +284,16 @@
       };
 
       let checkArrived = (vector) => {
-        if (vector.y <= 0 && vector.y > -5 && Math.abs(vector.x) < 10) {
+        if (vector.y <= 1 && vector.y > -5 && Math.abs(vector.x) < 10) {
           //we are just below (in front of) our destination
           // and nearby it in the x direction
           return true;
         }
       };
 
+      //
       // BASIC BEHAVIORS
+      //
       let stop = () => {
         activityHeartbeatCount = 0;
         currentActivity = "idle";
@@ -297,6 +330,20 @@
         locationY += velocityY;
       };
 
+      //
+      // INTERACT WITH ELEMENTS
+      //
+      let actOnElement = () => {
+        switch (getRandomInt(2)) {
+          case 0:
+            lookAtElement();
+            break;
+          case 1:
+            whackElement();
+            break;
+        }
+      };
+
       let lookAtElement = () => {
         currentActivity = "looking";
         setSprite("looking");
@@ -314,10 +361,30 @@
         const vector = getVectorToElement(targetElement);
         if (checkArrived(vector)) {
           stop();
-          lookAtElement();
+          actOnElement();
         } else {
           setVelocity(vector);
           move();
+        }
+      };
+
+      let whackElement = () => {
+        let doctorWhacks;
+        if (currentActivity !== "whacking") {
+          currentActivity = "whacking";
+          setSprite("whacking");
+          activityHeartbeatCount = 0;
+        }
+        if (activityHeartbeatCount % 5 === 0) {
+          doctorWhacks =
+            parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
+          if (isReversed) {
+            doctorWhacks--;
+          } else {
+            doctorWhacks++;
+          }
+          targetElement.setAttribute("doctor-whacks", doctorWhacks);
+          targetElement.style.transform = `rotate(${doctorWhacks}deg)`;
         }
       };
 
@@ -366,6 +433,14 @@
           }
           case "dying": {
             die();
+            break;
+          }
+          case "whacking": {
+            whackElement();
+            randomly(20, () => {
+              stop();
+              lookAtElement();
+            });
             break;
           }
         }

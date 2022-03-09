@@ -5,7 +5,7 @@ const ACTION_MAP = {
   looking: 1,
   walking: 2,
   running: 2,
-  whack: 3,
+  whacking: 3,
   coloring: 4,
   shrugging: 5,
   dying: 6,
@@ -145,7 +145,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     } while (
       randomElement === document.body ||
       randomElement === myElement ||
-      randomElement.tagName === "HTML"
+      (randomElement && randomElement.tagName === "HTML")
     );
     return randomElement;
   };
@@ -181,14 +181,16 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   };
 
   let checkArrived = (vector) => {
-    if (vector.y <= 0 && vector.y > -5 && Math.abs(vector.x) < 10) {
+    if (vector.y <= 1 && vector.y > -5 && Math.abs(vector.x) < 10) {
       //we are just below (in front of) our destination
       // and nearby it in the x direction
       return true;
     }
   };
 
+  //
   // BASIC BEHAVIORS
+  //
   let stop = () => {
     activityHeartbeatCount = 0;
     currentActivity = "idle";
@@ -225,6 +227,20 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     locationY += velocityY;
   };
 
+  //
+  // INTERACT WITH ELEMENTS
+  //
+  let actOnElement = () => {
+    switch (getRandomInt(2)) {
+      case 0:
+        lookAtElement();
+        break;
+      case 1:
+        whackElement();
+        break;
+    }
+  };
+
   let lookAtElement = () => {
     currentActivity = "looking";
     setSprite("looking");
@@ -242,10 +258,29 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     const vector = getVectorToElement(targetElement);
     if (checkArrived(vector)) {
       stop();
-      lookAtElement();
+      actOnElement();
     } else {
       setVelocity(vector);
       move();
+    }
+  };
+
+  let whackElement = () => {
+    let doctorWhacks;
+    if (currentActivity !== "whacking") {
+      currentActivity = "whacking";
+      setSprite("whacking");
+      activityHeartbeatCount = 0;
+    }
+    if (activityHeartbeatCount % 5 === 0) {
+      doctorWhacks = parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
+      if (isReversed) {
+        doctorWhacks--;
+      } else {
+        doctorWhacks++;
+      }
+      targetElement.setAttribute("doctor-whacks", doctorWhacks);
+      targetElement.style.transform = `rotate(${doctorWhacks}deg)`;
     }
   };
 
@@ -294,6 +329,14 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
       case "dying": {
         die();
+        break;
+      }
+      case "whacking": {
+        whackElement();
+        randomly(20, () => {
+          stop();
+          lookAtElement();
+        });
         break;
       }
     }
