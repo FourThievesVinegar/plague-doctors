@@ -142,7 +142,11 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
         getRandomInt(window.innerWidth),
         getRandomInt(window.innerHeight)
       );
-    } while (randomElement === document.body || randomElement === myElement);
+    } while (
+      randomElement === document.body ||
+      randomElement === myElement ||
+      randomElement === document
+    );
     return randomElement;
   };
 
@@ -228,6 +232,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   let walkToElement = (theElement) => {
     if (theElement) {
+      console.log(theElement);
       targetElement = theElement;
       currentActivity = "walking";
       setSprite("walking");

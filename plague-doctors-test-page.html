@@ -216,7 +216,8 @@
           );
         } while (
           randomElement === document.body ||
-          randomElement === myElement
+          randomElement === myElement ||
+          randomElement === document
         );
         return randomElement;
       };
@@ -303,6 +304,7 @@
 
       let walkToElement = (theElement) => {
         if (theElement) {
+          console.log(theElement);
           targetElement = theElement;
           currentActivity = "walking";
           setSprite("walking");
@@ -332,7 +334,7 @@
 
           window.setTimeout(() => {
             PlagueDoctorFactory.createPlagueDoctor().init();
-          }, getRandomInt(10) * 1000);
+          }, (getRandomInt(10) + 5) * 1000);
         });
       };
 
