@@ -113,6 +113,9 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     currentColor = color;
   };
 
+  //
+  // NAVIGATION
+  //
   let pickRandomElement = () => {
     let randomElement;
 
@@ -145,6 +148,14 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }
     velocityX = speed * (vector.x / totalDistance);
     velocityY = speed * (vector.y / totalDistance);
+
+    if (velocityX < 0) {
+      isReversed = true;
+      myElement.classList.add("image-reversed");
+    } else {
+      isReversed = false;
+      myElement.classList.remove("image-reversed");
+    }
   };
 
   let checkArrived = (vector) => {
@@ -160,6 +171,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     currentActivity = "idle";
     velocityX = 0;
     velocityY = 0;
+    setSprite("idle");
   };
 
   let move = () => {

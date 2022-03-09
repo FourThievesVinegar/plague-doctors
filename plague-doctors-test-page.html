@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>4TV Test Page</title>
+  <title>Plague Doctors Test Page</title>
   <style>
     body {
       position: absolute;
@@ -178,6 +178,9 @@
         currentColor = color;
       };
 
+      //
+      // NAVIGATION
+      //
       let pickRandomElement = () => {
         let randomElement;
 
@@ -213,6 +216,14 @@
         }
         velocityX = speed * (vector.x / totalDistance);
         velocityY = speed * (vector.y / totalDistance);
+
+        if (velocityX < 0) {
+          isReversed = true;
+          myElement.classList.add("image-reversed");
+        } else {
+          isReversed = false;
+          myElement.classList.remove("image-reversed");
+        }
       };
 
       let checkArrived = (vector) => {
@@ -228,6 +239,7 @@
         currentActivity = "idle";
         velocityX = 0;
         velocityY = 0;
+        setSprite("idle");
       };
 
       let move = () => {
