@@ -5,6 +5,7 @@
   transform: scale(1);
   opacity: 1;
   transition: opacity 0.5s ease, top 0.1s, left 0.1s;
+  cursor: crosshair;
 }
 
 .plague-doctor-element-init.plague-doctor-element-init {
@@ -14,4 +15,8 @@
 
 .image-reversed.image-reversed {
   transform: scaleX(-1);
+}
+
+.dead.dead {
+  transform: rotate(-90deg);
 }

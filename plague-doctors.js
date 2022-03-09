@@ -9,6 +9,7 @@ const ACTION_MAP = {
   coloring: 4,
   shrugging: 5,
   dying: 6,
+  dead: 0,
 };
 const ALLOWED_ACTIVITIES = [
   "idle",
@@ -20,6 +21,7 @@ const ALLOWED_ACTIVITIES = [
   "coloring",
   "shrugging",
   "dying",
+  "dead",
 ];
 const TARGETED_ACTIVITIES = {
   walking: "to",
@@ -58,6 +60,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let myElement = null; // The element rendering the gif
   let debugging = false; // Should we output debugging logs?
   //TODO: Fix scoping bug that prevents this from changing
+  let dead = false;
 
   let currentActivity = "idle";
 
@@ -186,6 +189,16 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     setSprite("idle");
   };
 
+  let die = () => {
+    setSprite("dying");
+    currentActivity = "dying";
+    if (activityHeartbeatCount > 5) {
+      dead = true;
+      setSprite("idle");
+      myElement.classList.add("dead");
+    }
+  };
+
   let changeColor = (color) => {
     currentColor = color || ALLOWED_COLORS[getRandomInt(ALLOWED_COLORS.length)];
   };
@@ -218,8 +231,28 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }
   };
 
+  //
+  // USER INTERACTIONS
+  //
+
+  const addEventListeners = () => {
+    myElement.addEventListener("click", () => {
+      // TODO: Detect whether it was in the center or periphery of the element
+      // If periphery, make him scared for a second, then run for cover
+      activityHeartbeatCount = 0;
+      die();
+
+      window.setTimeout(() => {
+        PlagueDoctorFactory.createPlagueDoctor().init();
+      }, getRandomInt(10) * 1000);
+    });
+  };
+
   // HIGH-LEVEL BEHAVIORS
   let doSomething = () => {
+    if (dead) {
+      return;
+    }
     switch (currentActivity) {
       case "idle": {
         randomly(10, () => {
@@ -241,6 +274,10 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
         });
         break;
       }
+      case "dying": {
+        die();
+        break;
+      }
     }
   };
 
@@ -256,6 +293,8 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }, 400);
     setSprite("idle");
     document.body.appendChild(myElement);
+
+    addEventListeners();
 
     heartbeat = window.setInterval(() => {
       if (debugging) {
