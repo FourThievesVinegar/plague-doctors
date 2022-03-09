@@ -145,7 +145,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     } while (
       randomElement === document.body ||
       randomElement === myElement ||
-      randomElement === document
+      randomElement.tagName === "HTML"
     );
     return randomElement;
   };
