@@ -1,0 +1,15 @@
+.plague-doctor-element {
+  position: fixed;
+  height: 52px;
+  width: 44px;
+  transform: scale(1);
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease, top 0.1s, left 0.1s;
+
+  background-color: blueviolet;
+}
+
+.plague-doctor-element-init.plague-doctor-element-init {
+  transform: scale(0.01);
+  opacity: 0;
+}
