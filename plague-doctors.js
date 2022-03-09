@@ -192,7 +192,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let die = () => {
     setSprite("dying");
     currentActivity = "dying";
-    if (activityHeartbeatCount > 10) {
+    if (activityHeartbeatCount > 12) {
       dead = true;
       setSprite("idle");
       myElement.classList.add("dead");
