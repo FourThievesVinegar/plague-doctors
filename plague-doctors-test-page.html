@@ -375,7 +375,7 @@
           setSprite("whacking");
           activityHeartbeatCount = 0;
         }
-        if (activityHeartbeatCount % 5 === 0) {
+        if (activityHeartbeatCount % 10 === 0) {
           doctorWhacks =
             parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
           if (isReversed) {

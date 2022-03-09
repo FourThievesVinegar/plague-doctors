@@ -43,6 +43,8 @@ const COLOR_MAP = {
   purple: { dark: "#a61dca", medium: "#b600e6", light: "#d225ff" },
 };
 const HEATBEAT_INTERVAL = 100;
+const HEARTBEATS_TO_DIE = 12;
+const HEARTBEATS_TO_WHACK = 10;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -202,7 +204,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let die = () => {
     setSprite("dying");
     currentActivity = "dying";
-    if (activityHeartbeatCount > 12) {
+    if (activityHeartbeatCount > HEARTBEATS_TO_DIE) {
       dead = true;
       // becomeCorpse() //Too sad looking at the little corpses
       vanish();
@@ -272,7 +274,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       setSprite("whacking");
       activityHeartbeatCount = 0;
     }
-    if (activityHeartbeatCount % 5 === 0) {
+    if (activityHeartbeatCount % HEARTBEATS_TO_WHACK === 0) {
       doctorWhacks = parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
       if (isReversed) {
         doctorWhacks--;
