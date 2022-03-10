@@ -128,6 +128,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     if (currentAction === action && color === currentColor) {
       return; //We are already using the correct src. No need to change
     }
+    myElement.style.transform = "";
     myElement.src = buildImageUrl(action, color);
     currentAction = action;
     currentColor = color;
@@ -249,7 +250,9 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   let walkToElement = (theElement) => {
     if (theElement) {
-      console.log(theElement);
+      if (debugging) {
+        console.log("Walking to", theElement);
+      }
       targetElement = theElement;
       currentActivity = "walking";
       setSprite("walking");
@@ -272,6 +275,9 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       currentActivity = "whacking";
       setSprite("whacking");
       activityHeartbeatCount = 0;
+      if (window.getComputedStyle(targetElement).display === "inline") {
+        targetElement.style.display = "inline-block";
+      }
     }
     if (
       activityHeartbeatCount > 0 &&
