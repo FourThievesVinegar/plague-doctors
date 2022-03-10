@@ -44,7 +44,7 @@ const COLOR_MAP = {
 };
 const HEATBEAT_INTERVAL = 100;
 const HEARTBEATS_TO_DIE = 12;
-const HEARTBEATS_TO_WHACK = 12;
+const HEARTBEATS_TO_WHACK = 8;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
