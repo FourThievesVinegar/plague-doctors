@@ -67,7 +67,12 @@
 </head>
 <body class="test-page">
   <h1>Plague Doctors</h1>
-  <h2>A project by and for the Four Thieves Vinegar Collective</h2>
+  <h2>
+    A project by and for the
+    <a target="_blank" href="https://fourthievesvinegar.org/"
+      >Four Thieves Vinegar Collective</a
+    >
+  </h2>
   <p>
     But you can use it too!
     <a
@@ -146,6 +151,8 @@
       purple: { dark: "#a61dca", medium: "#b600e6", light: "#d225ff" },
     };
     const HEATBEAT_INTERVAL = 100;
+    const HEARTBEATS_TO_DIE = 12;
+    const HEARTBEATS_TO_WHACK = 6;
 
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
@@ -229,6 +236,7 @@
         if (currentAction === action && color === currentColor) {
           return; //We are already using the correct src. No need to change
         }
+        myElement.style.transform = "";
         myElement.src = buildImageUrl(action, color);
         currentAction = action;
         currentColor = color;
@@ -284,9 +292,8 @@
       };
 
       let checkArrived = (vector) => {
-        if (vector.y <= 1 && vector.y > -5 && Math.abs(vector.x) < 15) {
-          //we are just below (in front of) our destination
-          // and nearby it in the x direction
+        if (Math.abs(vector.y) <= 15 && Math.abs(vector.x) <= 15) {
+          //We are near the destination
           return true;
         }
       };
@@ -305,7 +312,7 @@
       let die = () => {
         setSprite("dying");
         currentActivity = "dying";
-        if (activityHeartbeatCount > 12) {
+        if (activityHeartbeatCount > HEARTBEATS_TO_DIE) {
           dead = true;
           // becomeCorpse() //Too sad looking at the little corpses
           vanish();
@@ -351,7 +358,9 @@
 
       let walkToElement = (theElement) => {
         if (theElement) {
-          console.log(theElement);
+          if (debugging) {
+            console.log("Walking to", theElement);
+          }
           targetElement = theElement;
           currentActivity = "walking";
           setSprite("walking");
@@ -374,8 +383,14 @@
           currentActivity = "whacking";
           setSprite("whacking");
           activityHeartbeatCount = 0;
+          if (window.getComputedStyle(targetElement).display === "inline") {
+            targetElement.style.display = "inline-block";
+          }
         }
-        if (activityHeartbeatCount % 10 === 0) {
+        if (
+          activityHeartbeatCount > 0 &&
+          activityHeartbeatCount % HEARTBEATS_TO_WHACK === 0
+        ) {
           doctorWhacks =
             parseInt(targetElement.getAttribute("doctor-whacks")) || 0;
           if (isReversed) {
@@ -437,10 +452,12 @@
           }
           case "whacking": {
             whackElement();
-            randomly(20, () => {
-              stop();
-              lookAtElement();
-            });
+            if (activityHeartbeatCount > HEARTBEATS_TO_WHACK) {
+              randomly(20, () => {
+                stop();
+                lookAtElement();
+              });
+            }
             break;
           }
         }
