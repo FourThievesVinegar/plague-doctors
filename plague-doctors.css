@@ -20,3 +20,12 @@
 .dead.dead {
   transform: rotate(-90deg);
 }
+
+@media screen and (max-width: 768px) {
+  .plague-doctor-element {
+    transform: scale(2);
+  }
+  .image-reversed.image-reversed {
+    transform: scaleX(-2);
+  }
+}
