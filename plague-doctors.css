@@ -26,6 +26,6 @@
     transform: scale(2);
   }
   .image-reversed.image-reversed {
-    transform: scaleX(-2);
+    transform: scaleX(-2) scaleY(2);
   }
 }
