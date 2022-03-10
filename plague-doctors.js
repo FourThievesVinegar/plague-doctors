@@ -44,7 +44,7 @@ const COLOR_MAP = {
 };
 const HEATBEAT_INTERVAL = 100;
 const HEARTBEATS_TO_DIE = 12;
-const HEARTBEATS_TO_WHACK = 8;
+const HEARTBEATS_TO_WHACK = 7;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -337,10 +337,12 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
       case "whacking": {
         whackElement();
-        randomly(20, () => {
-          stop();
-          lookAtElement();
-        });
+        if (activityHeartbeatCount > HEARTBEATS_TO_WHACK) {
+          randomly(20, () => {
+            stop();
+            lookAtElement();
+          });
+        }
         break;
       }
     }
