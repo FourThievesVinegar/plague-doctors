@@ -307,6 +307,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
       window.setTimeout(() => {
         PlagueDoctorFactory.createPlagueDoctor().init();
+        PlagueDoctorFactory.createPlagueDoctor().init();
       }, (getRandomInt(10) + 5) * 1000);
     });
   };
@@ -356,7 +357,10 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
 
   let init = () => {
     myElement = document.createElement("img");
-    setLocation(20, 20);
+    setLocation(
+      getRandomInt(window.innerWidth),
+      getRandomInt(window.innerHeight)
+    );
     myElement.classList.add(
       "plague-doctor-element",
       "plague-doctor-element-init"
