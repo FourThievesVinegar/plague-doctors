@@ -426,6 +426,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
         if (activityHeartbeatCount > HEARTBEATS_TO_COLOR) {
           randomly(80, () => {
             stop();
+            changeColor(); // We are bored of this color now
             lookAtElement();
           });
         }
