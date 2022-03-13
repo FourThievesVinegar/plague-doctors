@@ -339,7 +339,8 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
 
       if (elementColoringCount > 256) {
-        stop(); //We have colored to the maximum
+        stop(); // We have colored to the maximum
+        changeColor(); // And we are bored of this color now
         return;
       }
 

@@ -30,19 +30,19 @@
       z-index: 1;
     }
     .test-div-1 {
-      top: 60%;
-      left: 35%;
+      top: 80%;
+      left: 15%;
     }
     .test-div-2 {
-      top: 35%;
+      top: 60%;
       left: 10%;
     }
     .test-div-3 {
-      top: 50%;
-      left: 70%;
+      top: 55%;
+      left: 60%;
     }
     .test-div-4 {
-      top: 80%;
+      top: 82%;
       left: 55%;
     }
   </style>
@@ -477,7 +477,8 @@
           }
 
           if (elementColoringCount > 256) {
-            stop(); //We have colored to the maximum
+            stop(); // We have colored to the maximum
+            changeColor(); // And we are bored of this color now
             return;
           }
 
