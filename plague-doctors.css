@@ -22,11 +22,11 @@
   transform: rotate(-90deg);
 }
 
-@media only screen and (max-min-device-width: 768px) {
+@media only screen and (max-device-width: 768px) {
   .plague-doctor-element {
-    transform: scale(2);
+    transform: scale(3);
   }
   .image-reversed.image-reversed {
-    transform: scaleX(-2) scaleY(2);
+    transform: scaleX(-3) scaleY(3);
   }
 }

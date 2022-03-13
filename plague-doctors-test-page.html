@@ -27,7 +27,7 @@
       z-index: 1;
     }
     .test-div-1 {
-      top: 40%;
+      top: 60%;
       left: 35%;
     }
     .test-div-2 {
@@ -69,12 +69,12 @@
       transform: rotate(-90deg);
     }
 
-    @media only screen and (max-min-device-width: 768px) {
+    @media only screen and (max-device-width: 768px) {
       .plague-doctor-element {
-        transform: scale(2);
+        transform: scale(3);
       }
       .image-reversed.image-reversed {
-        transform: scaleX(-2) scaleY(2);
+        transform: scaleX(-3) scaleY(3);
       }
     }
   </style>
@@ -108,6 +108,16 @@
     >
     to your page!
   </p>
+  <code>
+    <p>
+      &ltlink rel="stylesheet"
+      href="https://plague-doctors.netlify.app/plague-doctors.css"/>
+    </p>
+    <p>
+      &ltscript type="text/javascript"
+      src="https://plague-doctors.netlify.app/plague-doctors.js">&lt/script>
+    </p>
+  </code>
   <div class="test-div test-div-1">Hack the planet!</div>
   <div class="test-div test-div-2">Food, shelter, and medicine for all!</div>
   <div class="test-div test-div-3">Down with hierarchy!</div>
