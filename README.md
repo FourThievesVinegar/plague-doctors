@@ -18,3 +18,4 @@ A JS script that puts an adorable scamp on your page.
 3. Other things
 
 - Maybe they fall asleep
+- They change the magic lantern color
