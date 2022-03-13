@@ -355,11 +355,6 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       targetElement.style[coloringTarget] = `${COLOR_MAP[currentColor].dark}${(
         elementColoringCount - 1
       ).toString(16)}`;
-      console.log(
-        `${COLOR_MAP[currentColor].dark}${(elementColoringCount - 1).toString(
-          16
-        )}`
-      );
     }
   };
 
