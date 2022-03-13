@@ -1,4 +1,4 @@
-const IMAGE_URL_START = "/images/";
+const IMAGE_URL_START = "https://plague-doctors.netlify.app/images/";
 const ACTION_MAP = {
   idle: 0,
   head_wagging: 1,
@@ -33,6 +33,8 @@ const SPEEDS = {
   walking: 10,
   running: 20,
 };
+const COLORING_INCREMENT = 64;
+const COLORING_TARGETS = ["borderColor", "backgroundColor"];
 const ALLOWED_COLORS = ["red", "orange", "yellow", "green", "blue", "purple"];
 const COLOR_MAP = {
   red: { dark: "#ca1c1d", medium: "#e60000", light: "#ff2525" },
@@ -45,6 +47,7 @@ const COLOR_MAP = {
 const HEATBEAT_INTERVAL = 100;
 const HEARTBEATS_TO_DIE = 12;
 const HEARTBEATS_TO_WHACK = 6;
+const HEARTBEATS_TO_COLOR = 9;
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -146,9 +149,11 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
         getRandomInt(window.innerHeight)
       );
     } while (
+      !randomElement ||
       randomElement === document.body ||
-      randomElement === myElement ||
-      (randomElement && randomElement.tagName === "HTML")
+      (randomElement && randomElement.tagName === "HTML") ||
+      randomElement.window ||
+      randomElement.classList.contains("plague-doctor-element")
     );
     return randomElement;
   };
@@ -233,12 +238,15 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   // INTERACT WITH ELEMENTS
   //
   let actOnElement = () => {
-    switch (getRandomInt(2)) {
+    switch (getRandomInt(3)) {
       case 0:
         lookAtElement();
         break;
       case 1:
         whackElement();
+        break;
+      case 2:
+        colorElement();
         break;
     }
   };
@@ -294,6 +302,66 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }
   };
 
+  let colorElement = () => {
+    let coloringTarget =
+      COLORING_TARGETS[getRandomInt(COLORING_TARGETS.length)];
+    let elementColor;
+    let elementColoringCount;
+    if (currentActivity !== "coloring") {
+      currentActivity = "coloring";
+      setSprite("coloring");
+      activityHeartbeatCount = 0;
+    }
+    if (
+      activityHeartbeatCount > 0 &&
+      activityHeartbeatCount % HEARTBEATS_TO_COLOR === 0
+    ) {
+      elementColor = targetElement.getAttribute(
+        `doctor-${coloringTarget}-color`
+      );
+      elementColoringCount = parseInt(
+        targetElement.getAttribute(`doctor-${coloringTarget}-coloring-count`)
+      );
+      if (
+        elementColor &&
+        elementColoringCount &&
+        elementColor == currentColor
+      ) {
+        elementColoringCount += COLORING_INCREMENT;
+      } else {
+        elementColor = currentColor;
+        elementColoringCount = COLORING_INCREMENT;
+      }
+
+      if (coloringTarget === "borderColor") {
+        targetElement.style.borderWidth = "2px";
+        targetElement.style.borderStyle = "solid";
+      }
+
+      if (elementColoringCount > 256) {
+        stop(); //We have colored to the maximum
+        return;
+      }
+
+      targetElement.setAttribute(
+        `doctor-${coloringTarget}-color`,
+        currentColor
+      );
+      targetElement.setAttribute(
+        `doctor-${coloringTarget}-coloring-count`,
+        elementColoringCount
+      );
+      targetElement.style[coloringTarget] = `${COLOR_MAP[currentColor].dark}${(
+        elementColoringCount - 1
+      ).toString(16)}`;
+      console.log(
+        `${COLOR_MAP[currentColor].dark}${(elementColoringCount - 1).toString(
+          16
+        )}`
+      );
+    }
+  };
+
   //
   // USER INTERACTIONS
   //
@@ -308,7 +376,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       window.setTimeout(() => {
         PlagueDoctorFactory.createPlagueDoctor().init();
         PlagueDoctorFactory.createPlagueDoctor().init();
-      }, (getRandomInt(10) + 5) * 1000);
+      }, (getRandomInt(5) + 5) * 1000);
     });
   };
 
@@ -351,6 +419,15 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
           });
         }
         break;
+      }
+      case "coloring": {
+        colorElement();
+        if (activityHeartbeatCount > HEARTBEATS_TO_COLOR) {
+          randomly(80, () => {
+            stop();
+            lookAtElement();
+          });
+        }
       }
     }
   };

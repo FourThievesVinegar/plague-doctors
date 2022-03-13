@@ -6,7 +6,7 @@ A JS script that puts an adorable scamp on your page.
 
 1. Once the doctor arrives at an element it can do a number of things to it:
 
-- Use its magic lantern to change the color of the background, border, and/or text of that element
+- What are some others?
 
 2. User interactions
 
@@ -14,3 +14,7 @@ A JS script that puts an adorable scamp on your page.
 - Create controls where:
   - Have a button where they run around and clean up (after a few minutes or whatever)
   - You can spawn more doctors
+
+3. Other things
+
+- Maybe they fall asleep

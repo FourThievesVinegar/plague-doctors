@@ -14,13 +14,17 @@
       width: fit-content;
       max-width: 500px;
       margin: 36px auto;
+      z-index: 2;
     }
     .test-div {
       position: absolute;
       width: 100px;
       height: 100px;
-      border: 2px solid #555;
-      background-color: #999;
+      padding: 16px;
+      border: 2px solid #888;
+      background-color: #eee;
+      color: #eee;
+      z-index: 1;
     }
     .test-div-1 {
       top: 40%;
@@ -49,6 +53,7 @@
       opacity: 1;
       transition: opacity 0.5s ease, top 0.1s, left 0.1s;
       cursor: crosshair;
+      z-index: 100;
     }
 
     .plague-doctor-element-init.plague-doctor-element-init {
@@ -64,12 +69,12 @@
       transform: rotate(-90deg);
     }
 
-    @media only screen and (max-min-device-width: 767px) {
+    @media only screen and (max-min-device-width: 768px) {
       .plague-doctor-element {
         transform: scale(2);
       }
       .image-reversed.image-reversed {
-        transform: scaleX(-2);
+        transform: scaleX(-2) scaleY(2);
       }
     }
   </style>
@@ -103,12 +108,12 @@
     >
     to your page!
   </p>
-  <div class="test-div test-div-1"></div>
-  <div class="test-div test-div-2"></div>
-  <div class="test-div test-div-3"></div>
-  <div class="test-div test-div-4"></div>
+  <div class="test-div test-div-1">Hack the planet!</div>
+  <div class="test-div test-div-2">Food, shelter, and medicine for all!</div>
+  <div class="test-div test-div-3">Down with hierarchy!</div>
+  <div class="test-div test-div-4">We will get free.</div>
   <script>
-    const IMAGE_URL_START = "/images/";
+    const IMAGE_URL_START = "https://plague-doctors.netlify.app/images/";
     const ACTION_MAP = {
       idle: 0,
       head_wagging: 1,
@@ -143,6 +148,8 @@
       walking: 10,
       running: 20,
     };
+    const COLORING_INCREMENT = 64;
+    const COLORING_TARGETS = ["borderColor", "backgroundColor"];
     const ALLOWED_COLORS = [
       "red",
       "orange",
@@ -162,6 +169,7 @@
     const HEATBEAT_INTERVAL = 100;
     const HEARTBEATS_TO_DIE = 12;
     const HEARTBEATS_TO_WHACK = 6;
+    const HEARTBEATS_TO_COLOR = 9;
 
     function getRandomInt(max) {
       return Math.floor(Math.random() * max);
@@ -263,9 +271,11 @@
             getRandomInt(window.innerHeight)
           );
         } while (
+          !randomElement ||
           randomElement === document.body ||
-          randomElement === myElement ||
-          (randomElement && randomElement.tagName === "HTML")
+          (randomElement && randomElement.tagName === "HTML") ||
+          randomElement.window ||
+          randomElement.classList.contains("plague-doctor-element")
         );
         return randomElement;
       };
@@ -350,12 +360,15 @@
       // INTERACT WITH ELEMENTS
       //
       let actOnElement = () => {
-        switch (getRandomInt(2)) {
+        switch (getRandomInt(3)) {
           case 0:
             lookAtElement();
             break;
           case 1:
             whackElement();
+            break;
+          case 2:
+            colorElement();
             break;
         }
       };
@@ -412,6 +425,68 @@
         }
       };
 
+      let colorElement = () => {
+        let coloringTarget =
+          COLORING_TARGETS[getRandomInt(COLORING_TARGETS.length)];
+        let elementColor;
+        let elementColoringCount;
+        if (currentActivity !== "coloring") {
+          currentActivity = "coloring";
+          setSprite("coloring");
+          activityHeartbeatCount = 0;
+        }
+        if (
+          activityHeartbeatCount > 0 &&
+          activityHeartbeatCount % HEARTBEATS_TO_COLOR === 0
+        ) {
+          elementColor = targetElement.getAttribute(
+            `doctor-${coloringTarget}-color`
+          );
+          elementColoringCount = parseInt(
+            targetElement.getAttribute(
+              `doctor-${coloringTarget}-coloring-count`
+            )
+          );
+          if (
+            elementColor &&
+            elementColoringCount &&
+            elementColor == currentColor
+          ) {
+            elementColoringCount += COLORING_INCREMENT;
+          } else {
+            elementColor = currentColor;
+            elementColoringCount = COLORING_INCREMENT;
+          }
+
+          if (coloringTarget === "borderColor") {
+            targetElement.style.borderWidth = "2px";
+            targetElement.style.borderStyle = "solid";
+          }
+
+          if (elementColoringCount > 256) {
+            stop(); //We have colored to the maximum
+            return;
+          }
+
+          targetElement.setAttribute(
+            `doctor-${coloringTarget}-color`,
+            currentColor
+          );
+          targetElement.setAttribute(
+            `doctor-${coloringTarget}-coloring-count`,
+            elementColoringCount
+          );
+          targetElement.style[coloringTarget] = `${
+            COLOR_MAP[currentColor].dark
+          }${(elementColoringCount - 1).toString(16)}`;
+          console.log(
+            `${COLOR_MAP[currentColor].dark}${(
+              elementColoringCount - 1
+            ).toString(16)}`
+          );
+        }
+      };
+
       //
       // USER INTERACTIONS
       //
@@ -425,7 +500,8 @@
 
           window.setTimeout(() => {
             PlagueDoctorFactory.createPlagueDoctor().init();
-          }, (getRandomInt(10) + 5) * 1000);
+            PlagueDoctorFactory.createPlagueDoctor().init();
+          }, (getRandomInt(5) + 5) * 1000);
         });
       };
 
@@ -469,12 +545,24 @@
             }
             break;
           }
+          case "coloring": {
+            colorElement();
+            if (activityHeartbeatCount > HEARTBEATS_TO_COLOR) {
+              randomly(80, () => {
+                stop();
+                lookAtElement();
+              });
+            }
+          }
         }
       };
 
       let init = () => {
         myElement = document.createElement("img");
-        setLocation(20, 20);
+        setLocation(
+          getRandomInt(window.innerWidth),
+          getRandomInt(window.innerHeight)
+        );
         myElement.classList.add(
           "plague-doctor-element",
           "plague-doctor-element-init"
