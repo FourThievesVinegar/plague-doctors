@@ -31,7 +31,7 @@ const TARGETED_ACTIVITIES = {
 };
 const SPEEDS = {
   walking: 10,
-  running: 20,
+  running: 25,
 };
 const COLORING_INCREMENT = 64;
 const COLORING_TARGETS = ["borderColor", "backgroundColor"];
@@ -68,8 +68,8 @@ function randomly(chance, outcome) {
 var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let myElement = null; // The element rendering the gif
   let debugging = false; // Should we output debugging logs?
-  //TODO: Fix scoping bug that prevents this from changing
   let dead = false;
+  let hurrying = false;
 
   let currentActivity = "idle";
 
@@ -84,6 +84,8 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   let locationY = 0;
   let velocityX = 0;
   let velocityY = 0;
+
+  let cleaningUp = false;
 
   let activityHeartbeatCount;
 
@@ -105,6 +107,18 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
           } ${targetElement.classList.toString()}`
         : ""
     }`;
+  };
+
+  let setDebugging = (value) => {
+    debugging = value;
+  };
+
+  let setCleaningUp = (value) => {
+    cleaningUp = value;
+  };
+
+  let setHurrying = (value) => {
+    hurrying = value;
   };
 
   let setLocation = (x, y) => {
@@ -140,6 +154,20 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   //
   // NAVIGATION
   //
+  let pickModifiedElement = () => {
+    const whackedElements = document.getElementsByClassName("doctor-whacked");
+    const coloredElements = document.getElementsByClassName("doctor-colored");
+
+    if (whackedElements && whackedElements.length) {
+      return whackedElements[getRandomInt(whackedElements.length)];
+    }
+    if (coloredElements && coloredElements.length) {
+      return coloredElements[getRandomInt(coloredElements.length)];
+    }
+
+    return null;
+  };
+
   let pickRandomElement = () => {
     let randomElement;
 
@@ -238,6 +266,11 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
   // INTERACT WITH ELEMENTS
   //
   let actOnElement = () => {
+    if (cleaningUp) {
+      activityHeartbeatCount = 0;
+      currentActivity = "cleaning";
+      return;
+    }
     switch (getRandomInt(3)) {
       case 0:
         lookAtElement();
@@ -277,6 +310,27 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }
   };
 
+  let runToElement = (theElement) => {
+    if (theElement) {
+      if (debugging) {
+        console.log("Running to", theElement);
+      }
+      targetElement = theElement;
+      currentActivity = "running";
+      setSprite("walking");
+    }
+
+    //We might actually want to pick a point here, not the element itself.
+    const vector = getVectorToElement(targetElement);
+    if (checkArrived(vector)) {
+      stop();
+      actOnElement();
+    } else {
+      setVelocity(vector);
+      move();
+    }
+  };
+
   let whackElement = () => {
     let doctorWhacks;
     if (currentActivity !== "whacking") {
@@ -299,6 +353,11 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       }
       targetElement.setAttribute("doctor-whacks", doctorWhacks);
       targetElement.style.transform = `rotate(${doctorWhacks}deg)`;
+    }
+    if (doctorWhacks === 0) {
+      targetElement.classList.remove("doctor-whacked");
+    } else {
+      targetElement.classList.add("doctor-whacked");
     }
   };
 
@@ -355,6 +414,64 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       targetElement.style[coloringTarget] = `${COLOR_MAP[currentColor].dark}${(
         elementColoringCount - 1
       ).toString(16)}`;
+      targetElement.classList.add("doctor-colored");
+    }
+  };
+
+  let cleanUpElement = () => {
+    const elementWhacks = parseInt(targetElement.getAttribute("doctor-whacks"));
+    if (elementWhacks && elementWhacks !== 0) {
+      setSprite("whacking");
+      if (
+        activityHeartbeatCount > 0 &&
+        activityHeartbeatCount % HEARTBEATS_TO_WHACK === 0
+      ) {
+        if (elementWhacks <= 3 && elementWhacks >= -3) {
+          targetElement.setAttribute("doctor-whacks", 0);
+          targetElement.style.transform = `rotate(0deg)`;
+          targetElement.classList.remove("doctor-whacked");
+          activityHeartbeatCount = 0;
+        } else {
+          if (elementWhacks > 3) {
+            targetElement.setAttribute("doctor-whacks", elementWhacks - 3);
+            targetElement.style.transform = `rotate(${elementWhacks - 3}deg)`;
+          } else {
+            targetElement.setAttribute("doctor-whacks", elementWhacks + 3);
+            targetElement.style.transform = `rotate(${elementWhacks + 3}deg)`;
+          }
+        }
+      }
+      return;
+    }
+
+    const elementBorderColored = parseInt(
+      targetElement.getAttribute("doctor-bordercolor-coloring-count")
+    );
+    const elementBackgroundColored = parseInt(
+      targetElement.getAttribute("doctor-backgroundcolor-coloring-count")
+    );
+
+    console.log(elementBorderColored, elementBackgroundColored);
+
+    if (elementBorderColored || elementBackgroundColored) {
+      setSprite("coloring");
+      if (
+        activityHeartbeatCount > 0 &&
+        activityHeartbeatCount % HEARTBEATS_TO_COLOR === 0
+      ) {
+        targetElement.setAttribute("doctor-bordercolor-coloring-count", 0);
+        targetElement.setAttribute("doctor-backgroundcolor-coloring-count", 0);
+        targetElement.setAttribute("doctor-backgroundcolor-color", "");
+        targetElement.setAttribute("doctor-bordercolor-color", "");
+        targetElement.style.borderWidth = "";
+        targetElement.style.borderStyle = "";
+        targetElement.style.borderColor = "";
+        targetElement.style.backgroundColor = "";
+        targetElement.classList.remove("doctor-colored");
+        stop();
+      }
+    } else {
+      stop();
     }
   };
 
@@ -381,6 +498,33 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     if (dead) {
       return;
     }
+
+    if (cleaningUp) {
+      switch (currentActivity) {
+        case "idle": {
+          const newTargetElement = pickModifiedElement();
+          if (newTargetElement) {
+            runToElement(newTargetElement);
+          } else {
+            cleaningUp = false; // We are done cleaning up. All that's left is to clean up ourselves...
+            die(); // The controler should delete
+          }
+          break;
+        }
+        case "running": {
+          runToElement();
+          break;
+        }
+        case "cleaning": {
+          cleanUpElement();
+          break;
+        }
+        default:
+          stop();
+      }
+      return;
+    }
+
     switch (currentActivity) {
       case "idle": {
         randomly(10, () => {
@@ -394,6 +538,10 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
           stop();
           changeColor();
         });
+        break;
+      }
+      case "running": {
+        runToElement();
         break;
       }
       case "looking": {
@@ -429,7 +577,7 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
     }
   };
 
-  let init = () => {
+  let init = (speed) => {
     myElement = document.createElement("img");
     setLocation(
       getRandomInt(window.innerWidth),
@@ -454,15 +602,16 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       activityHeartbeatCount++;
       doSomething();
       updateSpriteLocation();
-    }, HEATBEAT_INTERVAL);
+    }, HEATBEAT_INTERVAL / speed);
   };
 
   return {
     init,
+    setCleaningUp,
+    setDebugging,
     setSprite,
     stop,
     walkToElement,
-    debugging,
   };
 };
 
@@ -482,20 +631,26 @@ var PlagueDoctors = (function () {
   let plagueDoctors = [];
   let enableDebugging = (value) => {
     for (i = 0; i < plagueDoctors.length; i++) {
-      plagueDoctors[i].debugging = value;
+      plagueDoctors[i].setDebugging(value);
     }
   };
-  let init = (numDoctors) => {
+  cleanUp = () => {
+    for (i = 0; i < plagueDoctors.length; i++) {
+      plagueDoctors[i].setCleaningUp(true);
+    }
+  };
+  let init = (numDoctors, speed) => {
     for (i = 0; i < numDoctors; i++) {
       plagueDoctors.push(PlagueDoctorFactory.createPlagueDoctor());
-      plagueDoctors[i].init();
+      plagueDoctors[i].init(speed);
     }
   };
 
   return {
     init,
+    cleanUp,
     enableDebugging,
   };
 })();
 
-PlagueDoctors.init(1);
+PlagueDoctors.init(3, 2);
