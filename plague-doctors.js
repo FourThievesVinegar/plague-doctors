@@ -639,7 +639,7 @@ var PlagueDoctors = (function () {
       plagueDoctors[i].setCleaningUp(true);
     }
   };
-  let init = (numDoctors, speed) => {
+  let init = (numDoctors = 1, speed = 1) => {
     for (i = 0; i < numDoctors; i++) {
       plagueDoctors.push(PlagueDoctorFactory.createPlagueDoctor());
       plagueDoctors[i].init(speed);
@@ -653,4 +653,4 @@ var PlagueDoctors = (function () {
   };
 })();
 
-PlagueDoctors.init(3, 2);
+PlagueDoctors.init(3, 1);
