@@ -452,8 +452,6 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       targetElement.getAttribute("doctor-backgroundcolor-coloring-count")
     );
 
-    console.log(elementBorderColored, elementBackgroundColored);
-
     if (elementBorderColored || elementBackgroundColored) {
       setSprite("coloring");
       if (
