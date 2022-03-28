@@ -73,6 +73,31 @@
       transform: rotate(-90deg);
     }
 
+    .plague-doctor-controls {
+      position: fixed;
+      right: 0;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      max-width: 100px;
+      transform: translateY(calc(-100% + 40px));
+      transition: transform 0.4s ease;
+    }
+
+    .plague-doctor-controls button {
+      margin: 8px;
+    }
+
+    .doctors-4tv-logo {
+      height: 40px;
+      align-self: flex-end;
+    }
+
+    .plague-doctor-controls:hover {
+      transform: translateY(0px);
+    }
+
     @media only screen and (max-device-width: 768px) {
       .plague-doctor-element {
         transform: scale(2);
@@ -320,7 +345,8 @@
           randomElement === document.body ||
           (randomElement && randomElement.tagName === "HTML") ||
           randomElement.window ||
-          randomElement.classList.contains("plague-doctor-element")
+          randomElement.classList.contains("plague-doctor-element") ||
+          randomElement.classList.contains("plague-doctor-controls")
         );
         return randomElement;
       };
@@ -795,6 +821,12 @@
           plagueDoctors.push(PlagueDoctorFactory.createPlagueDoctor());
           plagueDoctors[i].init(speed);
         }
+
+        document
+          .getElementsByClassName("doctors-clean-up-button")[0]
+          .addEventListener("click", () => {
+            cleanUp();
+          });
       };
 
       return {
@@ -803,6 +835,13 @@
         enableDebugging,
       };
     })();
+
+    var plagueDoctorsControls = document.createElement("div");
+    plagueDoctorsControls.classList.add("plague-doctor-controls");
+    plagueDoctorsControls.innerHTML = `
+  <button class="doctors-clean-up-button">Clean Up</button>
+  <img class="doctors-4tv-logo" src="https://plague-doctors.netlify.app/images/4tv_logo.png" />`;
+    document.body.appendChild(plagueDoctorsControls);
 
     PlagueDoctors.init(3, 1);
   </script>

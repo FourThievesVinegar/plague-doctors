@@ -181,7 +181,8 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       randomElement === document.body ||
       (randomElement && randomElement.tagName === "HTML") ||
       randomElement.window ||
-      randomElement.classList.contains("plague-doctor-element")
+      randomElement.classList.contains("plague-doctor-element") ||
+      randomElement.classList.contains("plague-doctor-controls")
     );
     return randomElement;
   };
@@ -644,6 +645,12 @@ var PlagueDoctors = (function () {
       plagueDoctors.push(PlagueDoctorFactory.createPlagueDoctor());
       plagueDoctors[i].init(speed);
     }
+
+    document
+      .getElementsByClassName("doctors-clean-up-button")[0]
+      .addEventListener("click", () => {
+        cleanUp();
+      });
   };
 
   return {
@@ -652,5 +659,12 @@ var PlagueDoctors = (function () {
     enableDebugging,
   };
 })();
+
+var plagueDoctorsControls = document.createElement("div");
+plagueDoctorsControls.classList.add("plague-doctor-controls");
+plagueDoctorsControls.innerHTML = `
+<button class="doctors-clean-up-button">Clean Up</button>
+<img class="doctors-4tv-logo" src="https://plague-doctors.netlify.app/images/4tv_logo.png" />`;
+document.body.appendChild(plagueDoctorsControls);
 
 PlagueDoctors.init(3, 1);
