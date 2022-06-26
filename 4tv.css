@@ -1,0 +1,25 @@
+@font-face {
+  font-family: "Beekeepers";
+  src: url("https://plague-doctors.netlify.app/fonts/TT2020Base-Regular.woff2")
+    format("woff2");
+}
+
+body {
+  background-color: #000;
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: beekeepers;
+}
+
+p,
+li,
+label {
+  font-family: Ubuntu, sans-serif;
+}
