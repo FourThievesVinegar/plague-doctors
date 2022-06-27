@@ -10,6 +10,11 @@
 }
 @font-face {
   font-family: "Capture It";
+  src: url("https://plague-doctors.netlify.app/fonts/Capture_it.woff")
+    format("woff");
+}
+@font-face {
+  font-family: "Capture It Inverted";
   src: url("https://plague-doctors.netlify.app/fonts/Capture_it_2.woff")
     format("woff");
 }
@@ -29,6 +34,10 @@ h6 {
 }
 
 .title-font {
+  font-family: Capture It;
+}
+
+.title-font-inverted {
   font-family: Capture It;
 }
 
