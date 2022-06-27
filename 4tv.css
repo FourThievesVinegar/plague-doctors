@@ -8,7 +8,11 @@
   src: url("https://plague-doctors.netlify.app/fonts/TT2020Base-Italic.woff2")
     format("woff2");
 }
-
+@font-face {
+  font-family: "Capture It";
+  src: url("https://plague-doctors.netlify.app/fonts/Capture_it_2.woff")
+    format("woff");
+}
 body {
   background-color: #000;
   color: #fff;
@@ -22,4 +26,16 @@ h4,
 h5,
 h6 {
   font-family: Beekeepers Italic;
+}
+
+.title-font {
+  font-family: Capture It;
+}
+
+a {
+  color: #491d88;
+}
+
+a:visited {
+  color: #491d88;
 }
