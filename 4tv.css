@@ -35,10 +35,14 @@ h6 {
 
 .title-font {
   font-family: Capture It;
+  letter-spacing: 1px;
+  font-weight: normal;
 }
 
 .title-font-inverted {
-  font-family: Capture It;
+  font-family: Capture It Inverted;
+  letter-spacing: 1px;
+  font-weight: normal;
 }
 
 a {
