@@ -3,10 +3,16 @@
   src: url("https://plague-doctors.netlify.app/fonts/TT2020Base-Regular.woff2")
     format("woff2");
 }
+@font-face {
+  font-family: "Beekeepers Italic";
+  src: url("https://plague-doctors.netlify.app/fonts/TT2020Base-Italic.woff2")
+    format("woff2");
+}
 
 body {
   background-color: #000;
   color: #fff;
+  font-family: Ubuntu, sans-serif;
 }
 
 h1,
@@ -15,11 +21,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: beekeepers;
-}
-
-p,
-li,
-label {
-  font-family: Ubuntu, sans-serif;
+  font-family: Beekeepers Italic;
 }
