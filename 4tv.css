@@ -57,3 +57,52 @@ a {
 a:visited {
   color: #6ac4b0;
 }
+
+/* STYLES FOR ALL THEMED PAGES */
+
+option {
+}
+
+/* STYLES FOR PURPLE PAGE */
+
+.purple-page button,
+.purple-page select,
+.purple-page option {
+  background: linear-gradient(
+    180deg,
+    #180830 0%,
+    #491d88 23.96%,
+    #491d88 76.04%,
+    #180830 100%
+  );
+  border: 2px solid #000000;
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.purple-page option {
+  background-color: #491d88;
+  color: #fff;
+}
+
+/* STYLES FOR YELLOW PAGE */
+
+.yellow-page button,
+.yellow-page select {
+  background: linear-gradient(
+    180deg,
+    #ac9c38 0%,
+    #d9c84b 23.96%,
+    #d9c84b 76.04%,
+    #ac9c38 100%
+  );
+  border: 2px solid #98892c;
+  color: #554a02;
+  border-radius: 16px;
+  padding: 8px;
+}
+
+.yellow-page option {
+  background-color: #d9c84b;
+  color: #554a02;
+}

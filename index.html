@@ -52,48 +52,72 @@
   <link rel="stylesheet" href="./4tv.css" />
 </head>
 <body class="test-page">
-  <h1 class="title-font">Plague Doctors</h1>
-  <h2>A project by and for the</h2>
-  <h2>
-    <a class="title-font" target="_blank" href="https://fourthievesvinegar.org/"
-      >Four Thieves Vinegar Collective</a
-    >
-  </h2>
-  <p>
-    But you can use it too!
-    <a
-      target="_blank"
-      href="https://github.com/FourThievesVinegar/plague-doctors"
-      >Get the code from the GitHub repo</a
-    >
-    or add
-    <a
-      target="_blank"
-      href="https://plague-doctors.netlify.app/plague-doctors.js"
-      >the script</a
-    >
-    and
-    <a
-      target="_blank"
-      href="https://plague-doctors.netlify.app/plague-doctors.css"
-      >the styles</a
-    >
-    to your page!
-  </p>
-  <p>
-    <code>
-      &ltlink rel="stylesheet"
-      href="https://plague-doctors.netlify.app/plague-doctors.css"/>
-    </code>
-    <br /><br />
-    <code>
-      &ltscript type="text/javascript"
-      src="https://plague-doctors.netlify.app/plague-doctors.js">&lt/script>
-    </code>
-  </p>
-  <div class="test-div test-div-1">Hack the planet!</div>
-  <div class="test-div test-div-2">Food, shelter, and medicine for all!</div>
-  <div class="test-div test-div-3">Down with hierarchy!</div>
-  <div class="test-div test-div-4">We will get free.</div>
+  <aside class="page-controls plague-doctor-ignore">
+    <label>Page color</label>
+    <select id="page-color-select">
+      <option value="">None</option>
+      <option value="purple">Purple</option>
+      <option value="blue">Blue</option>
+    </select>
+    <script>
+      colorSelectHandler = (e) => {
+        console.log(e);
+        document.body.className = "test-page";
+        document.body.classList.add(`${e.target.value}-page`);
+      };
+      document
+        .querySelector("#page-color-select")
+        .addEventListener("change", (e) => colorSelectHandler(e));
+    </script>
+    <button>Test Button</button>
+  </aside>
+  <main class="page-container">
+    <h1 class="title-font">Plague Doctors</h1>
+    <h2>A project by and for the</h2>
+    <h2>
+      <a
+        class="title-font"
+        target="_blank"
+        href="https://fourthievesvinegar.org/"
+        >Four Thieves Vinegar Collective</a
+      >
+    </h2>
+    <p>
+      But you can use it too!
+      <a
+        target="_blank"
+        href="https://github.com/FourThievesVinegar/plague-doctors"
+        >Get the code from the GitHub repo</a
+      >
+      or add
+      <a
+        target="_blank"
+        href="https://plague-doctors.netlify.app/plague-doctors.js"
+        >the script</a
+      >
+      and
+      <a
+        target="_blank"
+        href="https://plague-doctors.netlify.app/plague-doctors.css"
+        >the styles</a
+      >
+      to your page!
+    </p>
+    <p>
+      <code>
+        &ltlink rel="stylesheet"
+        href="https://plague-doctors.netlify.app/plague-doctors.css"/>
+      </code>
+      <br /><br />
+      <code>
+        &ltscript type="text/javascript"
+        src="https://plague-doctors.netlify.app/plague-doctors.js">&lt/script>
+      </code>
+    </p>
+    <div class="test-div test-div-1">Hack the planet!</div>
+    <div class="test-div test-div-2">Food, shelter, and medicine for all!</div>
+    <div class="test-div test-div-3">Down with hierarchy!</div>
+    <div class="test-div test-div-4">We will get free.</div>
+  </main>
   <script type="text/javascript" src="./plague-doctors.js"></script>
 </body>
