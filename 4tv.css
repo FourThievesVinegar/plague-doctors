@@ -64,6 +64,10 @@ a:visited {
   text-decoration: none;
 }
 
+input {
+  padding: 8px;
+}
+
 input[type="file"],
 button {
   border: none;
