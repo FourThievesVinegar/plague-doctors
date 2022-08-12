@@ -64,9 +64,11 @@ a:visited {
   text-decoration: none;
 }
 
+textarea,
 select,
 input {
   padding: 8px;
+  margin: 4px 8px;
 }
 
 input[type="file"],
