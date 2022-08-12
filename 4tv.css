@@ -64,6 +64,7 @@ a:visited {
   text-decoration: none;
 }
 
+select,
 input {
   padding: 8px;
 }
