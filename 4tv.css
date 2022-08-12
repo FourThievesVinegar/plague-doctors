@@ -64,6 +64,13 @@ a:visited {
   text-decoration: none;
 }
 
+input[type="file"],
+button {
+  border: none;
+  padding: 8px;
+  border-radius: 16px;
+}
+
 /* STYLES FOR ALL THEMED PAGES */
 
 option {
