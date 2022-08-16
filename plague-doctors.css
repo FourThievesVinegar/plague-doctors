@@ -1,5 +1,5 @@
 .plague-doctor-element {
-  position: fixed;
+  position: absolute;
   height: 52px;
   width: 44px;
   transform: scale(1);
