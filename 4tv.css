@@ -21,6 +21,17 @@
 
 :root {
   color-scheme: dark;
+
+  --dark-gray: #221f20;
+  --medium-gray: #bfbfbf;
+  --white: #fff;
+
+  --cyberpunk-bubblegum: #cf4673;
+  --bland-mustard: #d9c84b;
+  --minty-teal: #6ac4b0;
+  --peoples-purple: #491d88;
+  --relaxing-nectarine: #e07c31;
+  --exciting-dark-blue: #143b86;
 }
 
 body {
