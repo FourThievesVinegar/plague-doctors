@@ -180,9 +180,9 @@ var plagueDoctorTemplate = function plagueDoctorTemplate() {
       !randomElement ||
       randomElement === document.body ||
       (randomElement && randomElement.tagName === "HTML") ||
-      (randomElement && randomElement.tagName === "main") ||
       randomElement.window ||
       randomElement.classList.contains("plague-doctor-element") ||
+      randomElement.classList.contains("page-container") ||
       randomElement.classList.contains("plague-doctor-controls") ||
       randomElement.classList.contains("plague-doctor-ignore")
     );
